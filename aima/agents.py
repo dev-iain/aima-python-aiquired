@@ -191,7 +191,7 @@ def rule_match(state, rules):
 # ______________________________________________________________________________
 
 
-loc_A, loc_B = (0, 0), (1, 0)  # The two locations for the Vacuum world
+loc_A, loc_B, loc_C, loc_D = (0, 0), (1, 0), (0, 1), (1, 1)  # The four locations for the Vacuum world
 
 
 def RandomVacuumAgent():
@@ -203,7 +203,7 @@ def RandomVacuumAgent():
     >>> environment.status == {(1,0):'Clean' , (0,0) : 'Clean'}
     True
     """
-    return Agent(RandomAgentProgram(['Right', 'Left', 'Suck', 'NoOp']))
+    return Agent(RandomAgentProgram(['Right', 'Left','Up','Down', 'Suck', 'NoOp']))
 
 
 def TableDrivenVacuumAgent():
@@ -807,7 +807,9 @@ class TrivialVacuumEnvironment(Environment):
     def __init__(self):
         super().__init__()
         self.status = {loc_A: random.choice(['Clean', 'Dirty']),
-                       loc_B: random.choice(['Clean', 'Dirty'])}
+                       loc_B: random.choice(['Clean', 'Dirty']),
+                       loc_C: random.choice(['Clean', 'Dirty']),
+                       loc_D: random.choice(['Clean', 'Dirty'])}
 
     def thing_classes(self):
         """Return the Thing/Agent classes that may populate this vacuum world."""
@@ -820,11 +822,18 @@ class TrivialVacuumEnvironment(Environment):
     def execute_action(self, agent, action):
         """Change agent's location and/or location's status; track performance.
         Score 10 for each dirt cleaned; -1 for each move."""
+        a, b = agent.location
         if action == 'Right':
-            agent.location = loc_B
+            agent.location = (a + 1, b)
             agent.performance -= 1
         elif action == 'Left':
-            agent.location = loc_A
+            agent.location = (a - 1, b)
+            agent.performance -= 1
+        elif action == 'Up':
+            agent.location = (a, b + 1)
+            agent.performance -= 1
+        elif action == 'Down':
+            agent.location = (a, b - 1)
             agent.performance -= 1
         elif action == 'Suck':
             if self.status[agent.location] == 'Dirty':
@@ -833,7 +842,7 @@ class TrivialVacuumEnvironment(Environment):
 
     def default_location(self, thing):
         """Agents start in either location at random."""
-        return random.choice([loc_A, loc_B])
+        return random.choice([loc_A, loc_B, loc_C, loc_D])
 
 
 # ______________________________________________________________________________
