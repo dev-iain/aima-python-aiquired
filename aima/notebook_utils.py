@@ -50,15 +50,7 @@ def psource(*functions):
         from pygments.lexers import PythonLexer
         from pygments import highlight
 
-        # Render an HTML fragment with inline token colors.  ``full=True`` emits
-        # a complete document whose global ``body`` CSS leaks into VS Code's
-        # shared notebook webview and can make every Markdown cell unreadable.
-        highlighted = highlight(source_code, PythonLexer(),
-                                HtmlFormatter(noclasses=True, style='dracula',
-                                              nobackground=True))
-        # Give unstyled tokens a readable foreground instead of inheriting
-        # palette instead of inheriting a color from the notebook theme.
-        display(HTML('<div style="color: #f8f8f2">{}</div>'.format(highlighted)))
+        display(HTML(highlight(source_code, PythonLexer(), HtmlFormatter(noclasses=True, style='monokai'))))
 
     except ImportError:
         print(source_code)
