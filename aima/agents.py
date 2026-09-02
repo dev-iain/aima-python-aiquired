@@ -806,8 +806,7 @@ class TrivialVacuumEnvironment(Environment):
 
     def __init__(self):
         super().__init__()
-        self.status = {loc_A: random.choice(['Clean', 'Dirty']),
-                       loc_B: random.choice(['Clean', 'Dirty'])}
+        self.status = {loc: random.choice(['Clean', 'Dirty']) for loc in locations}
 
     def thing_classes(self):
         """Return the Thing/Agent classes that may populate this vacuum world."""
