@@ -187,9 +187,12 @@ def SimpleReflexAgentProgram():
     
     def program(percept):
         loc, status = percept
-        return ('Suck' if status == 'Dirty' 
-                else'Right' if loc == loc_A 
-                            else'Left')
+        if status == 'Dirty':
+            return 'Suck'
+        return ('Right' if loc == loc_A else
+                'Left' if loc == loc_B else
+                'Down' if loc == loc_C else
+                'Up')
     return program
 
         
