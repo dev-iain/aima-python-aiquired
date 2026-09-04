@@ -118,9 +118,32 @@ print("RandomVacuumAgent is located at {}.".format(random_agent.location))
 
 # %%
 from itertools import product
-statuses = ["Clean", "Dirty"]
-table = dict(product(locations, statuses))
-print(str(table))
+MAX_HISTORY = 3
+
+'''
+This part is a bit confusing. With how execute action works, loc_A pairs with loc_C instead of loc_A pairing with loc_B.
+This is actually what the locations look like as a matrix
+y=1: loc_B (0,1)  loc_D (1,1)
+y=0: loc_A (0,0)  loc_C (1,0)
+'''
+
+tour = {
+    (0, 0): 'Right', # goes to (1, 0)
+    (1, 0): 'Up', # goes to (1, 1)
+    (1, 1): 'Left', # goes to (0, 1)
+    (0, 1): 'Down', # goes to (0, 0)
+}
+
+def action(percept):
+    loc, status = percept
+    return 'Suck' if status == 'Dirty' else tour[loc]
+
+single_percepts = [(loc, status) for loc in locations for status in ('Clean', 'Dirty')]
+
+table = {}
+for length in range(1, MAX_HISTORY + 1):
+    for history in product(single_percepts, repeat=length):
+        table[history] = action(history[-1]) # history[-1] here is just the most recent percept
 # %% [markdown]
 # We will now create a table-driven agent program for our two-state environment.
 
