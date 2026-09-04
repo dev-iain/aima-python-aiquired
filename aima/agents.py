@@ -192,7 +192,7 @@ def rule_match(state, rules):
 
 
 loc_A, loc_B, loc_C, loc_D = (0, 0), (1, 0), (0, 1), (1, 1)  # The four locations for the Vacuum world
-
+locations = [loc_A, loc_B, loc_C, loc_D]
 
 def RandomVacuumAgent():
     """Randomly choose one of the actions from the vacuum environment.
@@ -261,13 +261,14 @@ def ModelBasedVacuumAgent():
     >>> environment.status == {(1,0):'Clean' , (0,0) : 'Clean'}
     True
     """
-    model = {loc_A: None, loc_B: None}
+    model = {loc_A: None, loc_B: None, loc_C: None, loc_D: None}
 
     def program(percept):
         """Same as ReflexVacuumAgent, except if everything is clean, do NoOp."""
-        location, status = percept
-        model[location] = status  # Update the model here
-        if model[loc_A] == model[loc_B] == 'Clean':
+        # location, status = percept
+        # model[location] = status  # Update the model here
+        state = update_state(state, action, percept, model)
+        if model[loc_A] == model[loc_B] == model[loc_C] == model[loc_D] == 'Clean':
             return 'NoOp'
         elif status == 'Dirty':
             return 'Suck'
@@ -275,6 +276,10 @@ def ModelBasedVacuumAgent():
             return 'Right'
         elif location == loc_B:
             return 'Left'
+        elif location == loc_C:
+            return 'Down'
+        elif location == loc_D:
+            return 'Up'
 
     return Agent(program)
 
