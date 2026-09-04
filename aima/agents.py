@@ -268,7 +268,7 @@ def ModelBasedVacuumAgent():
         # location, status = percept
         # model[location] = status  # Update the model here
         state = update_state(state, action, percept, model)
-        if model[loc_A] == model[loc_B] == model[loc_C] == model[loc_D] == 'Clean':
+        if all(model[loc] == 'Clean' for loc in locations):
             return 'NoOp'
         elif status == 'Dirty':
             return 'Suck'
