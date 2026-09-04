@@ -192,6 +192,7 @@ def rule_match(state, rules):
 
 
 loc_A, loc_B, loc_C, loc_D = (0, 0), (1, 0), (0, 1), (1, 1)  # The four locations for the Vacuum world
+locations = [loc_A, loc_B, loc_C, loc_D]
 
 
 def RandomVacuumAgent():
