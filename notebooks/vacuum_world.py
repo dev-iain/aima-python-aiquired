@@ -117,18 +117,10 @@ print("RandomVacuumAgent is located at {}.".format(random_agent.location))
 # In the two-state vacuum world, the table would consist of all the possible states of the agent.
 
 # %%
-table = {((loc_A, 'Clean'),): 'Right',
-             ((loc_A, 'Dirty'),): 'Suck',
-             ((loc_B, 'Clean'),): 'Left',
-             ((loc_B, 'Dirty'),): 'Suck',
-             ((loc_A, 'Dirty'), (loc_A, 'Clean')): 'Right',
-             ((loc_A, 'Clean'), (loc_B, 'Dirty')): 'Suck',
-             ((loc_B, 'Clean'), (loc_A, 'Dirty')): 'Suck',
-             ((loc_B, 'Dirty'), (loc_B, 'Clean')): 'Left',
-             ((loc_A, 'Dirty'), (loc_A, 'Clean'), (loc_B, 'Dirty')): 'Suck',
-             ((loc_B, 'Dirty'), (loc_B, 'Clean'), (loc_A, 'Dirty')): 'Suck'
-        }
-
+from itertools import product
+statuses = ["Clean", "Dirty"]
+table = dict(product(locations, statuses))
+print(str(table))
 # %% [markdown]
 # We will now create a table-driven agent program for our two-state environment.
 
