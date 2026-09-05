@@ -121,10 +121,9 @@ from itertools import product
 MAX_HISTORY = 3
 
 '''
-This part is a bit confusing. With how execute action works, loc_A pairs with loc_C instead of loc_A pairing with loc_B.
 This is actually what the locations look like as a matrix
-y=1: loc_B (0,1)  loc_D (1,1)
-y=0: loc_A (0,0)  loc_C (1,0)
+y=1: loc_C (0,1)  loc_D (1,1)
+y=0: loc_A (0,0)  loc_B (1,0)
 '''
 
 tour = {
