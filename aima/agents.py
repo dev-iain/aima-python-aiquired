@@ -826,6 +826,12 @@ class TrivialVacuumEnvironment(Environment):
         """Change agent's location and/or location's status; track performance.
         Score 10 for each dirt cleaned; -1 for each move."""
         a, b = agent.location
+        moves = {'Right': (a+1, b),
+                 'Left': (a - 1, b),
+                 'Up': (a, b + 1),
+                 'Down': (a, b - 1)
+            }
+        
         if action == 'Right':
             agent.location = (a + 1, b)
             agent.performance -= 1
