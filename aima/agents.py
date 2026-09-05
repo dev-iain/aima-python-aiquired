@@ -262,21 +262,26 @@ def ModelBasedVacuumAgent():
     >>> environment.status == {(1,0):'Clean' , (0,0) : 'Clean'}
     True
     """
-    model = {loc_A: None, loc_B: None}
+    model = {loc_A: None, loc_B: None, loc_C: None, loc_D: None}
 
     def program(percept):
         """Same as ReflexVacuumAgent, except if everything is clean, do NoOp."""
         location, status = percept
-        model[location] = status  # Update the model here
-        if model[loc_A] == model[loc_B] == 'Clean':
+        model[location] = status
+
+        if all(model[loc] == 'Clean' for loc in locations):
             return 'NoOp'
         elif status == 'Dirty':
             return 'Suck'
+        # map: A right to C up to D left to B down
         elif location == loc_A:
-            return 'Right'
+            return 'Right'  # A -> C
+        elif location == loc_C:
+            return 'Up'  # C -> D
+        elif location == loc_D:
+            return 'Left'  # D -> B
         elif location == loc_B:
-            return 'Left'
-
+            return 'Down'  # B -> A
     return Agent(program)
 
 
