@@ -208,8 +208,7 @@ def SimpleReflexAgentProgram():
         return ('Right' if loc == loc_A else
                 'Up' if loc == loc_B else
                 'Down' if loc == loc_C else
-                'Left' if loc == loc_D else
-                'None')
+                'Left' if loc == loc_D else None)
     return program
 
         
