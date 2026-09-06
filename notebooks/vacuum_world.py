@@ -194,6 +194,8 @@ trivial_vacuum_env.delete_thing(table_driven_agent)
 
 loc_A = (0, 0)
 loc_B = (1, 0)
+loc_C = (0, 1)
+loc_D = (1, 1)
 
 """We change the simpleReflexAgentProgram so that it doesn't make use of the Rule class"""
 def SimpleReflexAgentProgram():
@@ -204,9 +206,10 @@ def SimpleReflexAgentProgram():
         if status == 'Dirty':
             return 'Suck'
         return ('Right' if loc == loc_A else
-                'Left' if loc == loc_B else
+                'Up' if loc == loc_B else
                 'Down' if loc == loc_C else
-                'Up')
+                'Left' if loc == loc_D else
+                'Right')
     return program
 
         
