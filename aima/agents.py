@@ -275,13 +275,13 @@ def ModelBasedVacuumAgent():
             return 'Suck'
         # map: A right to C up to D left to B down
         elif location == loc_A:
-            return 'Right'  # A -> C
+            return 'Up'  # A -> C
         elif location == loc_C:
-            return 'Up'  # C -> D
+            return 'Right'  # C -> D
         elif location == loc_D:
-            return 'Left'  # D -> B
+            return 'Down'  # D -> B
         elif location == loc_B:
-            return 'Down'  # B -> A
+            return 'Left'  # B -> A
     return Agent(program)
 
 
@@ -826,17 +826,15 @@ class TrivialVacuumEnvironment(Environment):
         """Change agent's location and/or location's status; track performance.
         Score 10 for each dirt cleaned; -1 for each move."""
         a, b = agent.location
-        if action == 'Right':
-            agent.location = (a + 1, b)
-            agent.performance -= 1
-        elif action == 'Left':
-            agent.location = (a - 1, b)
-            agent.performance -= 1
-        elif action == 'Up':
-            agent.location = (a, b + 1)
-            agent.performance -= 1
-        elif action == 'Down':
-            agent.location = (a, b - 1)
+        moves = {'Right': (a + 1, b),
+                 'Left': (a - 1, b),
+                 'Up': (a, b + 1),
+                 'Down': (a, b - 1)
+            }
+        if action in moves:
+            target = moves[action]
+            if target in self.status:
+                agent.location = target
             agent.performance -= 1
         elif action == 'Suck':
             if self.status[agent.location] == 'Dirty':
