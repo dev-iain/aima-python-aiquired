@@ -39,7 +39,7 @@ import random
 import copy
 import collections
 import numbers
-
+import math
 
 # ______________________________________________________________________________
 
@@ -285,6 +285,37 @@ def ModelBasedVacuumAgent():
     return Agent(program)
 
 
+def HillClimbingVacuumAgent():
+    path = []
+
+    def program(percept):
+        location, current_value, neighbors = percept
+        # record current location to path
+        path.append(location)
+
+        if not neighbors:
+            program.done = True
+            return 'NoOp'
+        
+        # choose highest dirt level neighbor 
+        best_direction = max(neighbors, key = lambda d: neighbors[d][1])
+        best_value = neighbors[best_direction][1]
+
+        # move if neighbor better
+        if best_value > current_value:
+            return best_direction
+
+        # clean current location after comparing?
+        # if current_value > 0: return 'Suck'
+        
+        # done when local maximum
+        program.done = True
+        return 'NoOp'
+    
+    program.path = path
+    program.done = False
+    return Agent(program)
+
 # ______________________________________________________________________________
 
 
@@ -392,6 +423,52 @@ class Environment:
         if thing in self.agents:
             self.agents.remove(thing)
 
+# 4x4 grid environment matrix (top left(0,0) to bottom right(3,3))
+class DirtGridEnv(Environment):
+    moves = {'Up': (0, -1), 'Down': (0, 1), 'Left': (-1, 0), 'Right': (1, 0)}
+
+    def __init__(self, grid, start=(3,0)):
+        super().__init__()
+        self.grid = grid
+        self.width = len(grid[0])
+        self.height = len(grid)
+        self.start = start
+
+    def default_location(self, thing):
+        return self.start
+
+    def in_bounds(self, location):
+        x, y = location
+        return 0 <= x < self.width and 0 <= y < self.height
+
+    def percept(self, agent):
+        x, y = agent.location
+        neighbors = {}
+
+        for direction, (dx, dy) in self.moves.items():
+            neighbor = (x + dx, y + dy)
+
+            if self.in_bounds(neighbor):
+                nx, ny = neighbor
+                neighbors[direction] = (neighbor, self.grid[ny][nx])
+
+        return (agent.location, self.grid[y][x], neighbors)
+
+    def execute_action(self, agent, action):
+        if action in self.moves:
+            dx, dy = self.moves[action]
+            x, y = agent.location
+            new_location = (x + dx, y + dy)
+
+            if self.in_bounds(new_location):
+                agent.location = new_location
+        """
+        elif action == 'Suck':
+            x, y = agent.location
+            self.grid[y][x] = 0
+        """
+    def is_done(self):
+        return any(agent.program.done for agent in self.agents)
 
 class Direction:
     """A direction class for agents that want to move in a 2D plane.
