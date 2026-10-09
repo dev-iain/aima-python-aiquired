@@ -316,6 +316,41 @@ def HillClimbingVacuumAgent():
     program.done = False
     return Agent(program)
 
+def SimulatedAnnealingVacuumAgent():
+    path = []
+
+    def program(percept):
+        location, current_value, neighbors = percept
+        path.append(location)
+        temperature = program.temperature
+
+        if temperature < 0.01:
+            program.done = True
+            return 'NoOp'
+
+        direction = random.choice(list(neighbors))
+        neighbor_location, neighbor_value = neighbors[direction]
+
+        change = neighbor_value - current_value
+
+        if change >= 0:
+            action = direction
+        else:
+            probability = math.exp(change / temperature)
+            if random.random() < probability:
+                action = direction
+            else:
+                action = 'NoOp'
+
+        program.temperature *= program.cooling_rate
+        return action
+
+    program.path = path
+    program.done = False
+    program.temperature = 10.0
+    program.cooling_rate = 0.95
+    return Agent(program)
+
 # ______________________________________________________________________________
 
 
