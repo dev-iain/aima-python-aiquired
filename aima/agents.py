@@ -373,6 +373,37 @@ def RechargeMDPAgent(living_cost = -0.04):
     policy = best_policy(mdp, utilities)
 
     return mdp, utilities, policy
+
+def run_mdp(mdp, policy):
+    current = mdp.init
+    path = [current]
+
+    while current not in mdp.terminals:
+        # Find the best action for the current position
+        action = policy[current]
+
+        # Get possible next positions and their probabilities
+        transitions = mdp.T(current, action)
+
+        # Select where the vacuum actually moves
+        probabilities = [prob for prob, state in transitions]
+        states = [state for prob, state in transitions]
+
+        current = random.choices(states, weights=probabilities)[0]
+
+        # Record the position
+        path.append(current)
+
+        print(f"Action: {action}, Position: {current}")
+
+    if current == (3, 0):
+        print("Vacuum reached the recharge station!")
+    else:
+        print("Vacuum got trapped!")
+
+    print("Complete path:", path)
+
+    return path
 # ______________________________________________________________________________
 
 
